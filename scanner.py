@@ -6,37 +6,17 @@ class Token:
 
 class RPAL_Scanner:
     punction = [")", "(", ";", ","]
-
+    # List of operator symbols in RPAL
     operator_symbol = [
-        "+",
-        "-",
-        "*",
-        "<",
-        ">",
-        "&",
-        ".",
-        "@",
-        "/",
-        ":",
-        "=",
-        "~",
-        "|",
-        "$",
-        "!",
-        "#",
-        "%",
-        "^",
-        "_",
-        "[",
-        "]",
-        "{",
-        "}",
-        '"',
-        "`",
+        "+","-","*","<",">",
+        "&",".","@","/",":",
+        "=","~","|","$","!",
+        "#","%","^","_","[",
+        "]","{","}",'"',"`",
         "?",
     ]
 
-
+    # List of reserved keywords in RPAL
     RESERVED_KEYWORDS = [
         "fn",
         "where",
@@ -62,7 +42,7 @@ class RPAL_Scanner:
         "and",
         "|",
     ]
-
+    # List of elements that can be part of comments
     comment_elements = ['"', "\\", " ", "\t"]
 
     def __init__(self, file):
@@ -70,16 +50,16 @@ class RPAL_Scanner:
 
     # Scannning
     def Scanning(self):
-        Input_Tokens = []
+        Input_Tokens = []  # Temporary list to store all tokens including whitespace
         with open(self.file, "r") as f:
             inputString = f.read()
 
             i = 0
             while i < len(inputString):
-
+                                                                # Case 1: Handle identifiers (variables and keywords)
                 if inputString[i].isalpha():
-                    temp = i
-                    while i + 1 < len(inputString) and (
+                    temp = i        
+                    while i + 1 < len(inputString) and (        # Continue while we see letters, numbers, or underscores
                         (inputString[i + 1].isalpha())
                         or (inputString[i + 1].isdigit())
                         or (inputString[i + 1] == "_")
@@ -91,14 +71,14 @@ class RPAL_Scanner:
                     else:
                         Input_Tokens.append(Token(token, "<IDENTIFIER>"))
 
-                elif inputString[i].isdigit():
+                elif inputString[i].isdigit():                  # Case 2: Handle integers   
                     temp = i
                     while i + 1 < len(inputString) and inputString[i + 1].isdigit():
                         i += 1
                     token = inputString[temp : i + 1]
                     Input_Tokens.append(Token(token, "<INTEGER>"))
 
-                elif (
+                elif (                                          # Case 3: Handle whitespace (spaces, tabs, newlines)
                     inputString[i] == " "
                     or inputString[i] == "\t"
                     or inputString[i] == "\n"
@@ -113,7 +93,7 @@ class RPAL_Scanner:
                     token = inputString[temp : i + 1]
                     Input_Tokens.append(Token(repr(token), "<DELETE>"))
 
-                elif inputString[i] == "(":
+                elif inputString[i] == "(":                     # Case 4: Handle parentheses, semicolons, and commas
                     token = "("
                     Input_Tokens.append(Token("(", "("))
 
@@ -129,7 +109,7 @@ class RPAL_Scanner:
                     token = ","
                     Input_Tokens.append(Token(",", ","))
 
-                elif inputString[i] == "'":
+                elif inputString[i] == "'":                     # Case 5: Handle string literals
                     temp = i
                     while (
                         i + 1 < len(inputString)
@@ -154,7 +134,7 @@ class RPAL_Scanner:
                         token = inputString[temp + 1 : i]   #without ' ' marks
                         Input_Tokens.append(Token(token, "<STRING>"))
 
-                elif (
+                elif (                                          # Case 6: Handle comments
                     inputString[i] == "/"
                     and (i + 1 < len(inputString))
                     and inputString[i + 1] == "/"
@@ -177,7 +157,7 @@ class RPAL_Scanner:
                         Input_Tokens.append(Token(token, "<DELETE>"))
 
 
-                elif inputString[i] in RPAL_Scanner.operator_symbol:
+                elif inputString[i] in RPAL_Scanner.operator_symbol:                # Case 7: Handle operators
                     temp = i
                     while (
                         i + 1 < len(inputString) and inputString[i + 1] in RPAL_Scanner.operator_symbol
@@ -188,8 +168,7 @@ class RPAL_Scanner:
 
                 i += 1
 
-
-        # Screening
+        # Remove whitespace tokens from Input_Tokens
         Tokens = []
 
         for token in Input_Tokens:

@@ -10,7 +10,7 @@ class ASTParser:
         self.errorExist = False
 
     def read(self, value, type):
-        # value of identifier, string, and integer are "UserDefined"
+
         self.current_token = self.tokens[self.index]
 
         if self.current_token.value != value and value != "UserDefined":

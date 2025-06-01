@@ -24,11 +24,6 @@ else:
     hasInputError = True
     astFlag = "invalid"
 
-
-#For testing purposes
-# file = "tests/wsum2"
-# astFlag = "-ast"
-
 if not hasInputError:
     scanner = RPAL_Scanner(file)  # Give the name of the file
 
@@ -50,13 +45,6 @@ if not hasInputError:
 
             for i in range(10):
                 stand.makeST(root)
-
-            
-            # Printing Standaradize tree for testing purposes
-            # print(root.getVal(), "*********************************")
-            # myParser.preOrderTraversal(root)
-            # print("********************************")
-
             
             controlStructureArray = [[None for _ in range(200)] for _ in range(200)]
             stand.createControlStructures(root, controlStructureArray)
@@ -72,13 +60,6 @@ if not hasInputError:
                     if controlStructureArray[x][y] is not None:
                         temp.append(controlStructureArray[x][y])
                 setOfControlStruct.append(temp)
-
-
-            # print("*********************************")
-            # for i in setOfControlStruct:
-            #     for j in i:
-            #         print(j.value)
-            #     print("*********")    
             
             if astFlag != "-ast":
                 try:
@@ -88,7 +69,7 @@ if not hasInputError:
                     print(e)
 
         elif hasParsingError:
-            pass  # parsar has already print the message for this error
+            pass 
 
 else:
     print("Input Format is Wrong")
