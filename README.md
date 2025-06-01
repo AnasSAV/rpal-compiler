@@ -25,7 +25,8 @@ This project implements a full compiler pipeline for the RPAL language with the 
 | `standardizer.py`| Transforms AST and implements the CSE machine                     |
 | `environment.py` | Defines the environment structure for variable scoping            |
 | `myrpal.py`      | Main driver script                                                |
-| `test.rpal`      | Sample RPAL program                                               |
+| `Makefile`       | Build automation for testing                                     |
+| `tests/`         | Comprehensive test suite with 20+ RPAL test programs             |
 
 ---
 
@@ -57,8 +58,10 @@ python myrpal.py [-ast] file.rpal
 ### Examples:
 
 ```bash
-python myrpal.py test.rpal        # Run and evaluate the RPAL program
-python myrpal.py -ast test.rpal   # Display the AST without executing
+python myrpal.py test.rpal                    # Run and evaluate the RPAL program
+python myrpal.py -ast test.rpal               # Display the AST without executing
+python myrpal.py tests/test_factorial.rpal    # Run a test from the test suite
+python myrpal.py -ast tests/test_tuples.rpal  # View AST for tuple operations
 ```
 
 ---
@@ -117,6 +120,60 @@ RPAL is a functional language inspired by ML, Lisp, and Scheme.
 - Pattern matching with conditional expressions
 - Lexical scoping and recursive definitions
 - Tuple operations and built-in library
+
+---
+
+## 🧪 Testing
+
+The `tests/` directory contains comprehensive test cases covering various RPAL language features:
+
+### Test Categories
+
+#### Basic Language Features
+- `test_basic_let.rpal` - Basic let expressions and arithmetic
+- `test_conditional.rpal` - Conditional expressions
+- `test_string.rpal` - String literals and operations
+- `test_where.rpal` - Where clauses
+
+#### Function Features
+- `test_function_definitions.rpal` - Function definitions within one another
+- `test_lambda_function.rpal` - Lambda expressions (fn notation)
+- `test_function_parameter.rpal` - Passing functions as parameters
+- `test_function_return.rpal` - Returning functions from functions
+- `test_conditional_function.rpal` - Selecting functions using conditionals
+- `test_nary_function.rpal` - N-ary functions using tuples
+
+#### Recursion & Scope
+- `test_factorial.rpal` - Recursive factorial function
+- `test_nested_scopes.rpal` - Nested scope behavior
+- `test_simultaneous_definitions.rpal` - Simultaneous definitions with 'and'
+
+#### Data Structures
+- `test_tuples.rpal` - Basic tuple operations
+- `test_arrays.rpal` - Array-like tuple structures
+- `test_multidimensional_arrays.rpal` - Tuples of tuples
+
+#### Advanced Features
+- `test_normal_order.rpal` - Normal order vs PL order evaluation
+- `test_at_operator.rpal` - The @ operator for function application
+- `test_sum_list.rpal` - List summation with partial functions
+
+### Running Tests
+
+**Using Make (Recommended):**
+```bash
+make all                    # Run all tests
+make test_basic_let         # Run specific test
+make test-basic             # Run basic language feature tests
+make test-functions         # Run function-related tests
+make ast-all                # Run all tests with AST output
+```
+
+**Direct Python Execution:**
+```bash
+python myrpal.py tests/test_factorial.rpal
+python myrpal.py -ast tests/test_lambda_function.rpal
+```
 
 ---
 
