@@ -5,8 +5,23 @@
 #   make clean        - Clean up output files
 #   make list         - List all available tests
 
-# Python interpreter
-PYTHON = python3
+# Detect operating system
+ifeq ($(OS),Windows_NT)
+    DETECTED_OS := Windows
+    PYTHON = python
+    RM = del /Q
+    RMDIR = rmdir /S /Q
+    PATHSEP = \\
+    NULL_DEVICE = nul
+    SHELL = cmd
+else
+    DETECTED_OS := $(shell uname -s)
+    PYTHON = python3
+    RM = rm -f
+    RMDIR = rm -rf
+    PATHSEP = /
+    NULL_DEVICE = /dev/null
+endif
 
 # Main compiler script
 COMPILER = myrpal.py
@@ -34,11 +49,15 @@ $(TEST_NAMES): %: $(TEST_DIR)/%.rpal
 test-all:
 	@echo "Running all RPAL tests..."
 	@echo "========================="
+ifeq ($(DETECTED_OS),Windows)
+	@for %%t in ($(TEST_NAMES)) do @(echo === Running test: %%t === && $(PYTHON) $(COMPILER) $(TEST_DIR)/%%t.rpal && echo.)
+else
 	@for test in $(TEST_NAMES); do \
 		echo "=== Running test: $$test ==="; \
 		$(PYTHON) $(COMPILER) $(TEST_DIR)/$$test.rpal; \
 		echo ""; \
 	done
+endif
 	@echo "All tests completed!"
 
 # Rule to run tests with AST output
@@ -46,17 +65,21 @@ test-all:
 ast-all:
 	@echo "Running all RPAL tests with AST output..."
 	@echo "========================================="
+ifeq ($(DETECTED_OS),Windows)
+	@for %%t in ($(TEST_NAMES)) do @(echo === Running test with AST: %%t === && $(PYTHON) $(COMPILER) -ast $(TEST_DIR)/%%t.rpal && echo.)
+else
 	@for test in $(TEST_NAMES); do \
 		echo "=== Running test with AST: $$test ==="; \
 		$(PYTHON) $(COMPILER) -ast $(TEST_DIR)/$$test.rpal; \
 		echo ""; \
 	done
+endif
 
 # Rule to run individual test with AST
 .PHONY: $(addsuffix -ast,$(TEST_NAMES))
 $(addsuffix -ast,$(TEST_NAMES)): %-ast: $(TEST_DIR)/%.rpal
-	@echo "=== Running test with AST: $(basename $@) ==="
-	@$(PYTHON) $(COMPILER) -ast $(TEST_DIR)/$(basename $@).rpal
+	@echo "=== Running test with AST: $* ==="
+	@$(PYTHON) $(COMPILER) -ast $(TEST_DIR)/$*.rpal
 	@echo ""
 
 # List all available tests
@@ -64,9 +87,13 @@ $(addsuffix -ast,$(TEST_NAMES)): %-ast: $(TEST_DIR)/%.rpal
 list:
 	@echo "Available tests:"
 	@echo "================"
+ifeq ($(DETECTED_OS),Windows)
+	@for %%t in ($(TEST_NAMES)) do @echo   make %%t
+else
 	@for test in $(TEST_NAMES); do \
 		echo "  make $$test"; \
 	done
+endif
 	@echo ""
 	@echo "Additional targets:"
 	@echo "  make all         - Run all tests"
@@ -79,8 +106,13 @@ list:
 .PHONY: clean
 clean:
 	@echo "Cleaning up..."
-	@find . -name "*.pyc" -delete
-	@find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+ifeq ($(DETECTED_OS),Windows)
+	@if exist "*.pyc" del /Q *.pyc 2>$(NULL_DEVICE) || echo.>$(NULL_DEVICE)
+	@for /d /r . %%d in (__pycache__) do @if exist "%%d" rmdir /S /Q "%%d" 2>$(NULL_DEVICE) || echo.>$(NULL_DEVICE)
+else
+	@find . -name "*.pyc" -delete 2>$(NULL_DEVICE) || true
+	@find . -name "__pycache__" -type d -exec rm -rf {} + 2>$(NULL_DEVICE) || true
+endif
 	@echo "Clean completed!"
 
 # Help target
@@ -107,12 +139,16 @@ test-advanced: test_nested_scopes test_simultaneous_definitions test_normal_orde
 .PHONY: validate
 validate:
 	@echo "Validating test files..."
+ifeq ($(DETECTED_OS),Windows)
+	@for %%t in ($(TEST_NAMES)) do @if not exist "$(TEST_DIR)\\%%t.rpal" (echo Error: Test file $(TEST_DIR)\\%%t.rpal not found! && exit 1)
+else
 	@for test in $(TEST_NAMES); do \
 		if [ ! -f "$(TEST_DIR)/$$test.rpal" ]; then \
 			echo "Error: Test file $(TEST_DIR)/$$test.rpal not found!"; \
 			exit 1; \
 		fi; \
 	done
+endif
 	@echo "All test files validated successfully!"
 
 # Run tests in parallel (be careful with output formatting)
@@ -120,7 +156,12 @@ validate:
 parallel:
 	@echo "Running tests in parallel..."
 	@echo "============================="
+ifeq ($(DETECTED_OS),Windows)
+	@echo "Note: Parallel execution on Windows runs sequentially"
+	@for %%t in ($(TEST_NAMES)) do @(echo === %%t === && $(PYTHON) $(COMPILER) $(TEST_DIR)/%%t.rpal)
+else
 	@for test in $(TEST_NAMES); do \
 		(echo "=== $$test ==="; $(PYTHON) $(COMPILER) $(TEST_DIR)/$$test.rpal) & \
 	done; \
 	wait
+endif
