@@ -369,7 +369,7 @@ class standardizer:
             elif nextToken.value == "gamma":  # If gamma is on top of control stack
                 machineTop = m_stack[-1]
                 if machineTop.value == "lambda":  # CSE Rule 4 (Apply lambda)
-                    m_stack.pop()  # ************************************************************************************************************
+                    m_stack.pop()  
                     prevEnv = m_stack.pop()
                     # Pop the environment in which it was created
                     boundVar = m_stack.pop()  # Pop variable bounded to lambda
