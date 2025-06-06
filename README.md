@@ -130,33 +130,38 @@ The `tests/` directory contains comprehensive test cases covering various RPAL l
 ### Test Categories
 
 #### Basic Language Features
-- `test_basic_let.rpal` - Basic let expressions and arithmetic
-- `test_conditional.rpal` - Conditional expressions
-- `test_string.rpal` - String literals and operations
-- `test_where.rpal` - Where clauses
+- [`test_basic_let.rpal`](tests/test_basic_let.rpal) - Basic let expressions and arithmetic
+- [`test_conditional.rpal`](tests/test_conditional.rpal) - Conditional expressions
+- [`test_string.rpal`](tests/test_string.rpal) - String literals and operations
+- [`test_where.rpal`](tests/test_where.rpal) - Where clauses
 
 #### Function Features
-- `test_function_definitions.rpal` - Function definitions within one another
-- `test_lambda_function.rpal` - Lambda expressions (fn notation)
-- `test_function_parameter.rpal` - Passing functions as parameters
-- `test_function_return.rpal` - Returning functions from functions
-- `test_conditional_function.rpal` - Selecting functions using conditionals
-- `test_nary_function.rpal` - N-ary functions using tuples
+- [`test_function_definitions.rpal`](tests/test_function_definitions.rpal) - Function definitions with `within` clause
+- [`test_lambda_function.rpal`](tests/test_lambda_function.rpal) - Lambda expressions (fn notation)
+- [`test_function_parameter.rpal`](tests/test_function_parameter.rpal) - Passing functions as parameters
+- [`test_function_return.rpal`](tests/test_function_return.rpal) - Returning functions from functions
+- [`test_conditional_function.rpal`](tests/test_conditional_function.rpal) - Selecting functions using conditionals
+- [`test_nary_function.rpal`](tests/test_nary_function.rpal) - N-ary functions using tuples
 
 #### Recursion & Scope
-- `test_factorial.rpal` - Recursive factorial function
-- `test_nested_scopes.rpal` - Nested scope behavior
-- `test_simultaneous_definitions.rpal` - Simultaneous definitions with 'and'
+- [`test_factorial.rpal`](tests/test_factorial.rpal) - Recursive factorial function
+- [`test_nested_scopes.rpal`](tests/test_nested_scopes.rpal) - Nested scope behavior
+- [`test_simultaneous_definitions.rpal`](tests/test_simultaneous_definitions.rpal) - Simultaneous definitions with 'and'
+- [`test_string_length.rpal`](tests/test_string_length.rpal) - Recursive string length calculation
+- [`test_perfect_square.rpal`](tests/test_perfect_square.rpal) - Perfect square detection using recursion
 
 #### Data Structures
-- `test_tuples.rpal` - Basic tuple operations
-- `test_arrays.rpal` - Array-like tuple structures
-- `test_multidimensional_arrays.rpal` - Tuples of tuples
+- [`test_tuples.rpal`](tests/test_tuples.rpal) - Basic tuple operations and nested data structures
+- [`test_arrays.rpal`](tests/test_arrays.rpal) - Array-like tuple structures with indexing
+- [`test_multidimensional_arrays.rpal`](tests/test_multidimensional_arrays.rpal) - Tuples of tuples (matrices)
+- [`test_triangular_array.rpal`](tests/test_triangular_array.rpal) - Triangular array data structure
+- [`test_tuple_function.rpal`](tests/test_tuple_function.rpal) - Functions stored in tuples
 
 #### Advanced Features
-- `test_normal_order.rpal` - Normal order vs PL order evaluation
-- `test_at_operator.rpal` - The @ operator for function application
-- `test_sum_list.rpal` - List summation with partial functions
+- [`test_normal_order.rpal`](tests/test_normal_order.rpal) - Normal order vs PL order evaluation
+- [`test_at_operator.rpal`](tests/test_at_operator.rpal) - The @ operator for function application
+- [`test_sum_list.rpal`](tests/test_sum_list.rpal) - List summation with partial functions
+- [`test_vector_sum.rpal`](tests/test_vector_sum.rpal) - Vector addition operations
 
 ### Running Tests
 
@@ -166,7 +171,11 @@ make all                    # Run all tests
 make test_basic_let         # Run specific test
 make test-basic             # Run basic language feature tests
 make test-functions         # Run function-related tests
+make test-recursion         # Run recursion-related tests
+make test-data-structures   # Run data structure tests
+make test-advanced          # Run advanced feature tests
 make ast-all                # Run all tests with AST output
+make list                   # List all available tests
 ```
 
 **Direct Python Execution:**
